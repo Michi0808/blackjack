@@ -11,6 +11,25 @@ for (let i = 0; i < suit.length; i++) {
   }
 }
 
+//each player draw 2 cards
+opening(deck);
+
+// Opening
+function opening(deck) {
+  for (let i = 0; i < 2; i++) {
+    const card = drawCard(deck);
+    displayCard("playercards", card);
+  }
+
+  const dealerCard = drawCard(deck);
+  $(".dealercards").append(
+    `<img src="./image/cards/${dealerCard.num}_${dealerCard.suit}.png" alt="cards" width="130" height="189">`
+  );
+  $(".dealercards").prepend(
+    `<img src="./image/cards/0_back.png" alt="cards" width="130" height="189" class="back">`
+  );
+}
+
 // Drawing a card
 function drawCard(deck) {
   let index = Math.floor(Math.random() * deck.length);
