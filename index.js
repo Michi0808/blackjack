@@ -18,19 +18,25 @@ function drawCard(deck) {
   deck.splice(index, 1);
   return card;
 }
-const card = drawCard(deck);
 
-//Display a new card
-$(".dealercards").append(
-  `<img src="./image/cards/${card.num}_${card.suit}.png" alt="cards" width="130" height="189">`
-);
+// Display a new card
+function displayCard(targetClass, card) {
+  $(`.${targetClass}`).append(
+    `<img src="./image/cards/${card.num}_${card.suit}.png" alt="cards" width="130" height="189">`
+  );
+}
+// Hit button
+$("#hit-button").click(function () {
+  const card = drawCard(deck);
+  displayCard("playercards", card);
+});
 
+// Sum up the score
 $(".dealercards img").each(function () {
   let src = $(this).attr("src");
   let filename = src.split("/").pop();
   let number = filename.split("_")[0];
   dScore += parseInt(number);
-  console.log(dScore); //debug
 });
 
-$(".dealerscore").text(dScore);
+$(".dealerscore").text(isNaN(dScore) ? 0 : dScore);

@@ -8,7 +8,7 @@
     display: flex;
     justify-content: flex-end;
     align-items: flex-start;
-    height: 50vh; 
+    height: 40vh; 
 }
 
 .dealerscore{
@@ -33,7 +33,7 @@
     display: flex;
     justify-content: flex-start;
     align-items: flex-end;
-    height: 50%; 
+    height: 100%; 
 }
 
 .playerscore{
@@ -46,4 +46,17 @@
     margin-bottom: 5px;
     text-align: center;
     line-height: 10px;
+}
+
+#hit-button{
+    margin-left: 20px;
+    margin-bottom: 20px;
+    padding: 10px 20px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.back{
+    border: 1px solid black;
+    border-radius: 8px;
 }
