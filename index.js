@@ -21,14 +21,28 @@ function drawCard(deck) {
 
 // Display a new card
 function displayCard(targetClass, card) {
-  $(`.${targetClass}`).append(
-    `<img src="./image/cards/${card.num}_${card.suit}.png" alt="cards" width="130" height="189">`
-  );
+  if (targetClass === "playercards") {
+    $(`.${targetClass}`).append(
+      `<img src="./image/cards/${card.num}_${card.suit}.png" alt="cards" width="130" height="189">`
+    );
+  } else {
+    $(`.${targetClass}`).prepend(
+      `<img src="./image/cards/${card.num}_${card.suit}.png" alt="cards" width="130" height="189">`
+    );
+  }
 }
+
 // Hit button
 $("#hit-button").click(function () {
   const card = drawCard(deck);
   displayCard("playercards", card);
+});
+
+// Strand button
+$("#stand-button").click(function () {
+  $(".back").remove();
+  const card = drawCard(deck);
+  displayCard("dealercards", card);
 });
 
 // Sum up the score
