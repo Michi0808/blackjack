@@ -23,9 +23,27 @@
     line-height: 10px;
 }
 
+.player {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
 .playercards {
     display: flex;
     justify-content: flex-start;
     align-items: flex-end;
     height: 50%; 
+}
+
+.playerscore{
+    border: #ff69b4 solid 1px;
+    font-size:110%;
+    padding: 15px 20px;
+    width: 15px;
+    height: 10px;
+    float: right;
+    margin-bottom: 5px;
+    text-align: center;
+    line-height: 10px;
 }
