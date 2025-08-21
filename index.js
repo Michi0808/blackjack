@@ -1,8 +1,10 @@
 const suit = ["c", "d", "h", "s"];
 const cardNum = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
 const deck = [];
+let dStopFlg = true;
+let bustFlg = false;
 
-// Custom event listener : when a new card is added to dealer's hand, sum up the score
+// Dealer score event listener : when a new card is added to dealer's hand, sum up the score
 $(".dealercards").on("cardAdded", function () {
   let score = 0;
   let aceCount = 0;
@@ -31,10 +33,18 @@ $(".dealercards").on("cardAdded", function () {
     aceCount--;
   }
 
+  if (score > 16) dStopFlg = false;
+  if (score > 21) bustFlg = true;
+
   $(".dealerscore").text(score);
+  if (bustFlg) {
+    $(".dealerstatus").append(
+      `<img src="./image/bust.png" alt="bust" width="150" height="60">`
+    );
+  }
 });
 
-// Custom event listener : when a new card is added to player's hand, sum up the score
+// Player score event listener : when a new card is added to player's hand, sum up the score
 $(".playercards").on("cardAdded", function () {
   let score = 0;
   let aceCount = 0;
@@ -63,7 +73,14 @@ $(".playercards").on("cardAdded", function () {
     aceCount--;
   }
 
+  if (score > 21) bustFlg = true;
+
   $(".playerscore").text(score);
+  if (bustFlg) {
+    $(".playerstatus").append(
+      `<img src="./image/bust.png" alt="bust" width="150" height="60">`
+    );
+  }
 });
 
 // Deck generation, Ref: https://mebee.info/2022/08/24/post-71799/
@@ -130,6 +147,9 @@ $("#hit-button").click(function () {
 // Strand button
 $("#stand-button").click(function () {
   $(".back").remove();
-  const card = drawCard(deck);
-  displayCard("dealercards", card);
+
+  while (dStopFlg) {
+    const card = drawCard(deck);
+    displayCard("dealercards", card);
+  }
 });

@@ -4,6 +4,12 @@
     align-items: flex-end;
 }
 
+.dealer-info {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+}
+
 .dealercards {
     display: flex;
     justify-content: flex-end;
@@ -27,6 +33,12 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+}
+
+.player-info {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
 }
 
 .playercards {
