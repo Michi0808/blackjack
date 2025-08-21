@@ -5,13 +5,31 @@ const deck = [];
 // Custom event listener : when a new card is added to dealer's hand, sum up the score
 $(".dealercards").on("cardAdded", function () {
   let score = 0;
+  let aceCount = 0;
 
   $(".dealercards img").each(function () {
     let src = $(this).attr("src");
     let filename = src.split("/").pop();
     let number = filename.split("_")[0];
-    score += parseInt(number);
+
+    //Logic for the face cards (J, Q, K), they all value 10
+    if (["11", "12", "13"].includes(number)) {
+      number = "10";
+    }
+
+    if (number === "1") {
+      aceCount++;
+    } else {
+      score += parseInt(number);
+    }
   });
+
+  //Logic for the ace card, If the total score includes an ace itself over 21, Ace value 1, otherwise 11
+  while (aceCount > 0) {
+    score += 11;
+    if (score > 21) score -= 10;
+    aceCount--;
+  }
 
   $(".dealerscore").text(score);
 });
@@ -19,13 +37,31 @@ $(".dealercards").on("cardAdded", function () {
 // Custom event listener : when a new card is added to player's hand, sum up the score
 $(".playercards").on("cardAdded", function () {
   let score = 0;
+  let aceCount = 0;
 
   $(".playercards img").each(function () {
     let src = $(this).attr("src");
     let filename = src.split("/").pop();
     let number = filename.split("_")[0];
-    score += parseInt(number);
+
+    //Logic for the face cards (J, Q, K), they all value 10
+    if (["11", "12", "13"].includes(number)) {
+      number = "10";
+    }
+
+    if (number === "1") {
+      aceCount++;
+    } else {
+      score += parseInt(number);
+    }
   });
+
+  //Logic for the ace card, If the total score includes an ace itself over 21, Ace value 1, otherwise 11
+  while (aceCount > 0) {
+    score += 11;
+    if (score > 21) score -= 10;
+    aceCount--;
+  }
 
   $(".playerscore").text(score);
 });
@@ -38,10 +74,10 @@ for (let i = 0; i < suit.length; i++) {
   }
 }
 
-//each player draw 2 cards
+//Each player draws 2 cards for an opening setting
 opening(deck);
 
-// Opening
+// Setting first hands
 function opening(deck) {
   for (let i = 0; i < 2; i++) {
     const card = drawCard(deck);
