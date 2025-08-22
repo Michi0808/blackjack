@@ -1,6 +1,6 @@
 const suit = ["c", "d", "h", "s"];
 const cardNum = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
-const deck = [];
+let deck = [];
 let dStopFlg = true;
 let bustFlg = false;
 
@@ -41,6 +41,7 @@ $(".dealercards").on("cardAdded", function () {
     $(".dealerstatus").append(
       `<img src="./image/bust.png" alt="bust" width="150" height="60">`
     );
+    showOutcome("win");
   }
 });
 
@@ -80,19 +81,23 @@ $(".playercards").on("cardAdded", function () {
     $(".playerstatus").append(
       `<img src="./image/bust.png" alt="bust" width="150" height="60">`
     );
+    showOutcome("lose");
   }
 });
 
+//Each player draws 2 cards for an opening setting
+generatDeck();
+opening(deck);
+
 // Deck generation, Ref: https://mebee.info/2022/08/24/post-71799/
-for (let i = 0; i < suit.length; i++) {
-  for (let j = 0; j < cardNum.length; j++) {
-    let card = { num: cardNum[j], suit: suit[i] };
-    deck.push(card);
+function generatDeck() {
+  for (let i = 0; i < suit.length; i++) {
+    for (let j = 0; j < cardNum.length; j++) {
+      let card = { num: cardNum[j], suit: suit[i] };
+      deck.push(card);
+    }
   }
 }
-
-//Each player draws 2 cards for an opening setting
-opening(deck);
 
 // Setting first hands
 function opening(deck) {
@@ -138,13 +143,35 @@ function displayCard(targetClass, card) {
   $(`.${targetClass}`).trigger("cardAdded");
 }
 
+//Display the outcome of the game
+function showOutcome(outcome) {
+  $(".outcome").prepend(
+    `<img src="./image/${outcome}.png" alt="cards" width="500" height="300" id="result">`
+  );
+  $(".popup").addClass("show-popup").fadeIn();
+}
+
+//Reset the game setting
+function reset() {
+  $(".dealercards").empty();
+  $(".playercards").empty();
+  $(".dealerstatus").empty();
+  $(".playerstatus").empty();
+  $("#result").remove();
+  deck = [];
+  dStopFlg = true;
+  bustFlg = false;
+  generatDeck();
+  opening(deck);
+}
+
 // Hit button
 $("#hit-button").click(function () {
   const card = drawCard(deck);
   displayCard("playercards", card);
 });
 
-// Strand button
+// Stand button
 $("#stand-button").click(function () {
   $(".back").remove();
 
@@ -152,4 +179,10 @@ $("#stand-button").click(function () {
     const card = drawCard(deck);
     displayCard("dealercards", card);
   }
+});
+
+// OK button
+$("#ok").on("click", function () {
+  $(".popup").fadeOut();
+  reset();
 });
