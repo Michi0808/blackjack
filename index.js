@@ -3,6 +3,8 @@ const cardNum = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
 let deck = [];
 let dStopFlg = true;
 let bustFlg = false;
+let dBjFlg = true;
+let pBjFlg = true;
 
 // Dealer score event listener : when a new card is added to dealer's hand, sum up the score
 $(".dealercards").on("cardAdded", function () {
@@ -43,6 +45,13 @@ $(".dealercards").on("cardAdded", function () {
     );
     showOutcome("win");
   }
+
+  if (dBjFlg && score === 21) {
+    $(".dealerstatus").append(
+      `<img src="./image/bj.png" alt="bust" width="150" height="60">`
+    );
+    showOutcome("lose");
+  }
 });
 
 // Player score event listener : when a new card is added to player's hand, sum up the score
@@ -82,6 +91,14 @@ $(".playercards").on("cardAdded", function () {
       `<img src="./image/bust.png" alt="bust" width="150" height="60">`
     );
     showOutcome("lose");
+  }
+
+  if (pBjFlg && score === 21) {
+    $(".playerstatus").append(
+      `<img src="./image/bj.png" alt="bust" width="150" height="60">`
+    );
+    showOutcome("win");
+    pBjFlg = false;
   }
 });
 
@@ -158,26 +175,53 @@ function reset() {
   $(".dealerstatus").empty();
   $(".playerstatus").empty();
   $("#result").remove();
+  $("#hit-button").prop("disabled", false);
   deck = [];
   dStopFlg = true;
   bustFlg = false;
+  pBjFlg = true;
+  dBjFlg = true;
   generatDeck();
   opening(deck);
 }
 
 // Hit button
 $("#hit-button").click(function () {
+  pBjFlg = false;
   const card = drawCard(deck);
   displayCard("playercards", card);
 });
 
 // Stand button
 $("#stand-button").click(function () {
+  $("#hit-button").prop("disabled", true);
   $(".back").remove();
+
+  const card = drawCard(deck);
+  displayCard("dealercards", card);
+
+  let dScore = Number($(".dealerscore").text());
+  if (dScore === 21) return;
+
+  dBjFlg = false;
 
   while (dStopFlg) {
     const card = drawCard(deck);
     displayCard("dealercards", card);
+  }
+
+  if (bustFlg) return;
+
+  //Determine the winner
+  dScore = Number($(".dealerscore").text());
+  let pScore = Number($(".playerscore").text());
+
+  if (dScore > pScore) {
+    showOutcome("lose");
+  } else if (dScore < pScore) {
+    showOutcome("win");
+  } else {
+    showOutcome("even");
   }
 });
 
