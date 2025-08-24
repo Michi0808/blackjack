@@ -1,3 +1,10 @@
+body {
+  background-image: url("./image/bg_greenfelt.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
 .dealer {
     display: flex;
     flex-direction: column;
@@ -19,6 +26,7 @@
 
 .dealerscore{
     border: #ff69b4 solid 1px;
+    background-color: white;
     font-size:110%;
     padding: 15px 20px;
     width: 15px;
@@ -50,6 +58,7 @@
 
 .playerscore{
     border: #ff69b4 solid 1px;
+    background-color: white;
     font-size:110%;
     padding: 15px 20px;
     width: 15px;
@@ -90,7 +99,7 @@
     height: 100vh;
     width: 100%;
     background: black;
-    opacity: 0.7;
+    opacity: 0.8;
     position: fixed;
     top: 0;
     left: 0;
