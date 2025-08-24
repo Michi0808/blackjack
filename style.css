@@ -1,8 +1,15 @@
 body {
-  background-image: url("./image/bg_greenfelt.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+    background-image: url("./image/bg_greenfelt.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+h1{
+    font-size: 44px;
+    text-shadow: 2px 2px 5px gold,0 0 20px red; 
+    text-align: center;  
+    font-family: 'Impact', sans-serif;
 }
 
 .dealer {
@@ -69,14 +76,39 @@ body {
     line-height: 10px;
 }
 
-.button{
-    margin-left: 20px;
-    margin-bottom: 20px;
-    padding: 10px 20px;
-    font-size: 20px;
-    width: 7em;
-    height:2.5em;
-    cursor: pointer;
+/* [Ref] https://getcssscan.com/css-buttons-examples #Button62 */
+.button {
+  background: linear-gradient(to bottom right, #ad9554, #fdf9da);
+  border: 1;
+  border-radius: 12px;
+  color: black;
+  display: inline-block;
+  font-family: -apple-system,system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 0.5;
+  outline: transparent;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  transition: box-shadow .2s ease-in-out;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  white-space: nowrap;
+  width: 7em;
+  height:2.5em;
+  cursor: pointer;
+  margin-left: 20px;
+  margin-bottom: 20px;
+}
+
+.button:not([disabled]):focus {
+  box-shadow: 0 0 .25rem rgba(0, 0, 0, 0.5), -.125rem -.125rem 1rem rgba(189, 155, 0, 0.5), .125rem .125rem 1rem rgba(255, 154, 90, 0.5);
+}
+
+.button:not([disabled]):hover {
+  box-shadow: 0 0 .25rem rgba(0, 0, 0, 0.5), -.125rem -.125rem 1rem rgba(189, 155, 0, 0.5), .125rem .125rem 1rem rgba(255, 154, 90, 0.5);
 }
 
 .hit-stand{
