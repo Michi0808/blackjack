@@ -32,7 +32,7 @@ $(".dealercards").on("cardAdded", function () {
       number = "10";
     }
 
-    // Count aces afterwords using a special logic
+    // Count aces afterwards using a special logic
     if (number === "1") {
       aceCount++;
     } else {
@@ -63,7 +63,7 @@ $(".dealercards").on("cardAdded", function () {
   // If the first two cards equal 21, declare Blackjack and end the game
   if (dBjFlg && score === 21) {
     $(".dealerstatus").append(
-      `<img src="./image/bj.png" alt="bust" width="150" height="60">`
+      `<img src="./image/bj.png" alt="blackjack" width="150" height="60">`
     );
     showOutcome("lose");
   }
@@ -87,7 +87,7 @@ $(".playercards").on("cardAdded", function () {
       number = "10";
     }
 
-    // Count aces afterwords using a special logic
+    // Count aces afterwards using a special logic
     if (number === "1") {
       aceCount++;
     } else {
@@ -117,7 +117,7 @@ $(".playercards").on("cardAdded", function () {
   // If the first two cards equal 21, declare Blackjack and end the game
   if (pBjFlg && score === 21) {
     $(".playerstatus").append(
-      `<img src="./image/bj.png" alt="bust" width="150" height="60">`
+      `<img src="./image/bj.png" alt="blackjack" width="150" height="60">`
     );
     showOutcome("win");
     pBjFlg = false;
@@ -125,14 +125,14 @@ $(".playercards").on("cardAdded", function () {
 });
 
 //Each player draws 2 cards for an opening setting
-$("#deal").get(0).play();
-generatDeck();
+playSound($("#deal"));
+generateDeck();
 opening(deck);
 
 // ===================================================================================================
 // Deck generation, [Ref] https://mebee.info/2022/08/24/post-71799/
 // ===================================================================================================
-function generatDeck() {
+function generateDeck() {
   for (let i = 0; i < suit.length; i++) {
     for (let j = 0; j < cardNum.length; j++) {
       let card = { num: cardNum[j], suit: suit[i] };
@@ -159,7 +159,6 @@ async function opening(deck) {
   const dCard1 = drawCard(deck);
   await displayCard("dealercards", dCard1);
 
-  const dCard2 = drawCard(deck);
   await displayFaceDown("dealercards");
   //Score calculation
   $(".dealercards").trigger("cardAdded");
@@ -226,8 +225,11 @@ function showOutcome(outcome) {
   if (gameOver) return;
   gameOver = true;
 
+  $("#hit-button").prop("disabled", true);
+  $("#stand-button").prop("disabled", true);
+
   $(".outcome").prepend(
-    `<img src="./image/${outcome}.png" alt="cards" width="500" height="300" id="result">`
+    `<img src="./image/${outcome}.png" alt="outcome" width="500" height="300" id="result">`
   );
   $(".popup").addClass("show-popup").fadeIn();
 }
@@ -265,8 +267,8 @@ function reset() {
   dBjFlg = true;
   $("#hit-button").prop("disabled", true);
   $("#stand-button").prop("disabled", true);
-  $("#deal").get(0).play();
-  generatDeck();
+  playSound($("#deal"));
+  generateDeck();
   opening(deck);
 }
 
@@ -274,7 +276,7 @@ function reset() {
 // Hit button
 // ===================================================================================================
 $("#hit-button").click(function () {
-  $("#draw").get(0).play();
+  playSound($("#draw"));
   pBjFlg = false;
   const card = drawCard(deck);
   displayCard("playercards", card);
