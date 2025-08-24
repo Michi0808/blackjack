@@ -125,6 +125,7 @@ $(".playercards").on("cardAdded", function () {
 });
 
 //Each player draws 2 cards for an opening setting
+$("#deal").get(0).play();
 generatDeck();
 opening(deck);
 
@@ -162,6 +163,9 @@ async function opening(deck) {
   await displayFaceDown("dealercards");
   //Score calculation
   $(".dealercards").trigger("cardAdded");
+
+  $("#hit-button").prop("disabled", false);
+  $("#stand-button").prop("disabled", false);
 }
 
 // ===================================================================================================
@@ -229,6 +233,20 @@ function showOutcome(outcome) {
 }
 
 // ===================================================================================================
+//Play a short sound effect
+// ===================================================================================================
+function playSound($audio) {
+  const el = $audio.get(0);
+  if (!el) return;
+
+  // Pause any current playback
+  el.pause();
+  // Reset the playback position
+  el.currentTime = 0;
+  el.play();
+}
+
+// ===================================================================================================
 //Reset the game setting
 // ===================================================================================================
 function reset() {
@@ -245,6 +263,9 @@ function reset() {
   dBust = false;
   pBjFlg = true;
   dBjFlg = true;
+  $("#hit-button").prop("disabled", true);
+  $("#stand-button").prop("disabled", true);
+  $("#deal").get(0).play();
   generatDeck();
   opening(deck);
 }
@@ -253,6 +274,7 @@ function reset() {
 // Hit button
 // ===================================================================================================
 $("#hit-button").click(function () {
+  $("#draw").get(0).play();
   pBjFlg = false;
   const card = drawCard(deck);
   displayCard("playercards", card);
@@ -263,6 +285,7 @@ $("#hit-button").click(function () {
 // ===================================================================================================
 $("#stand-button").on("click", async () => {
   $("#hit-button").prop("disabled", true);
+  $("#stand-button").prop("disabled", true);
   $(".back").remove();
 
   const card = drawCard(deck);
@@ -277,6 +300,7 @@ $("#stand-button").on("click", async () => {
   // Dealer must hit until reaching at least 17
   while (dStopFlg) {
     const card = drawCard(deck);
+    playSound($("#draw"));
     await displayCard("dealercards", card, 500);
   }
 

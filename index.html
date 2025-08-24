@@ -22,8 +22,8 @@
     </div>
     <div class="player">
         <div class="hit-stand">
-            <button id="hit-button" class="button">HIT</button>
-            <button id="stand-button" class="button">STAND</button>
+            <button id="hit-button" class="button" disabled>HIT</button>
+            <button id="stand-button" class="button" disabled>STAND</button>
         </div>
         <div class="player-info">
             <div class="playerscore"></div>
@@ -31,6 +31,8 @@
         </div>
         <div class="playercards"></div>
     </div>
+    <audio src="./sound/draw.mp3" id="draw" hidden></audio>
+    <audio src="./sound/deal.mp3" id="deal" hidden></audio>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="index.js"></script>
 </body>
