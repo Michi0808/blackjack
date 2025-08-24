@@ -1,8 +1,16 @@
+/*
+  References:
+  Code ideas from online sources (e.g., ChatGPT, articles) are cited using [Ref] tags.
+  Search "Ref" in the code to locate all references.
+*/
 const suit = ["c", "d", "h", "s"];
 const cardNum = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
+const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 let deck = [];
 let dStopFlg = true;
-let bustFlg = false;
+let pBust = false;
+let dBust = false;
+let gameOver = false;
 let dBjFlg = true;
 let pBjFlg = true;
 
@@ -40,12 +48,12 @@ $(".dealercards").on("cardAdded", function () {
   }
 
   if (score > 16) dStopFlg = false;
-  if (score > 21) bustFlg = true;
+  if (score > 21) dBust = true;
 
   $(".dealerscore").text(score);
 
   // If the score is 22 or higher, declare Bust and end the game
-  if (bustFlg) {
+  if (dBust) {
     $(".dealerstatus").append(
       `<img src="./image/bust.png" alt="bust" width="150" height="60">`
     );
@@ -94,12 +102,12 @@ $(".playercards").on("cardAdded", function () {
     aceCount--;
   }
 
-  if (score > 21) bustFlg = true;
+  if (score > 21) pBust = true;
 
   $(".playerscore").text(score);
 
   // If the score is 22 or higher, declare Bust and end the game
-  if (bustFlg) {
+  if (pBust) {
     $(".playerstatus").append(
       `<img src="./image/bust.png" alt="bust" width="150" height="60">`
     );
@@ -121,7 +129,7 @@ generatDeck();
 opening(deck);
 
 // ===================================================================================================
-// Deck generation, Ref: https://mebee.info/2022/08/24/post-71799/
+// Deck generation, [Ref] https://mebee.info/2022/08/24/post-71799/
 // ===================================================================================================
 function generatDeck() {
   for (let i = 0; i < suit.length; i++) {
@@ -135,23 +143,23 @@ function generatDeck() {
 // ===================================================================================================
 // Setting first hands
 // ===================================================================================================
-function opening(deck) {
+async function opening(deck) {
   // Player draws two face-up cards at the beginning
-  for (let i = 0; i < 2; i++) {
-    const card = drawCard(deck);
-    displayCard("playercards", card);
-  }
+  const pCard1 = drawCard(deck);
+  await displayCard("playercards", pCard1);
+
+  const pCard2 = drawCard(deck);
+  await displayCard("playercards", pCard2);
+
   //Score calculation
   $(".playercards").trigger("cardAdded");
 
   // Dealer draws one face-up card and one face-down card at the beginning
-  const dealerCard = drawCard(deck);
-  $(".dealercards").append(
-    `<img src="./image/cards/${dealerCard.num}_${dealerCard.suit}.png" alt="cards" width="130" height="189">`
-  );
-  $(".dealercards").prepend(
-    `<img src="./image/cards/0_back.png" alt="cards" width="130" height="189" class="back">`
-  );
+  const dCard1 = drawCard(deck);
+  await displayCard("dealercards", dCard1);
+
+  const dCard2 = drawCard(deck);
+  await displayFaceDown("dealercards");
   //Score calculation
   $(".dealercards").trigger("cardAdded");
 }
@@ -169,26 +177,51 @@ function drawCard(deck) {
 
 // ===================================================================================================
 // Display a new card
+// [Ref] Initially, I attempted to add delayed execution for card draws after building the base game.
+//       but it froze the game.
+//       Solution (async/await for delay control) was implemented with ChatGPT's help.
 // ===================================================================================================
-function displayCard(targetClass, card) {
-  if (targetClass === "playercards") {
-    $(`.${targetClass}`).append(
-      `<img src="./image/cards/${card.num}_${card.suit}.png" alt="cards" width="130" height="189">`
-    );
-  } else {
-    $(`.${targetClass}`).prepend(
-      `<img src="./image/cards/${card.num}_${card.suit}.png" alt="cards" width="130" height="189">`
-    );
-  }
+function displayCard(targetClass, card, ms = 500) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      if (targetClass === "playercards") {
+        $(`.${targetClass}`).append(
+          `<img src="./image/cards/${card.num}_${card.suit}.png" alt="cards" width="130" height="189">`
+        );
+      } else {
+        $(`.${targetClass}`).prepend(
+          `<img src="./image/cards/${card.num}_${card.suit}.png" alt="cards" width="130" height="189">`
+        );
+      }
 
-  //Score calculation
-  $(`.${targetClass}`).trigger("cardAdded");
+      //Score calculation
+      $(`.${targetClass}`).trigger("cardAdded");
+      resolve();
+    }, ms);
+  });
+}
+
+// ===================================================================================================
+// Drawing dealer's first face-down card
+// ===================================================================================================
+function displayFaceDown(targetClass, ms = 500) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      $(`.${targetClass}`).prepend(
+        `<img src="./image/cards/0_back.png" alt="card-back" width="130" height="189" class="back">`
+      );
+      resolve();
+    }, ms);
+  });
 }
 
 // ===================================================================================================
 //Display the outcome of the game
 // ===================================================================================================
 function showOutcome(outcome) {
+  if (gameOver) return;
+  gameOver = true;
+
   $(".outcome").prepend(
     `<img src="./image/${outcome}.png" alt="cards" width="500" height="300" id="result">`
   );
@@ -207,7 +240,9 @@ function reset() {
   $("#hit-button").prop("disabled", false);
   deck = [];
   dStopFlg = true;
-  bustFlg = false;
+  gameOver = false;
+  pBust = false;
+  dBust = false;
   pBjFlg = true;
   dBjFlg = true;
   generatDeck();
@@ -226,12 +261,12 @@ $("#hit-button").click(function () {
 // ===================================================================================================
 // Stand button
 // ===================================================================================================
-$("#stand-button").click(function () {
+$("#stand-button").on("click", async () => {
   $("#hit-button").prop("disabled", true);
   $(".back").remove();
 
   const card = drawCard(deck);
-  displayCard("dealercards", card);
+  await displayCard("dealercards", card, 300);
 
   // If Blackjack, skip further processing
   let dScore = Number($(".dealerscore").text());
@@ -242,11 +277,11 @@ $("#stand-button").click(function () {
   // Dealer must hit until reaching at least 17
   while (dStopFlg) {
     const card = drawCard(deck);
-    displayCard("dealercards", card);
+    await displayCard("dealercards", card, 500);
   }
 
   // If Bust, skip further processing
-  if (bustFlg) return;
+  if (dBust) return;
 
   //Determine the winner
   dScore = Number($(".dealerscore").text());
