@@ -6,6 +6,8 @@ A simple Blackjack game built with HTML, CSS, JavaScript (jQuery).
 This project is a browser-based Blackjack game.  
 It was created as a practice project for JavaScript and DOM manipulation, and later improved with asynchronous animations and sound effects.
 
+![Blackjack Screenshot](./image/screenshot1.png)
+
 ## Features
 - Deal cards with a short delay animation
 - Player actions: **Hit** and **Stand**
