@@ -1,8 +1,3 @@
-/*
-  References:
-  Code ideas from online sources (e.g., ChatGPT, articles) are cited using [Ref] tags.
-  Search "Ref" in the code to locate all references.
-*/
 const suit = ["c", "d", "h", "s"];
 const cardNum = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));
@@ -130,7 +125,7 @@ generateDeck();
 opening(deck);
 
 // ===================================================================================================
-// Deck generation, [Ref] https://mebee.info/2022/08/24/post-71799/
+// Deck generation
 // ===================================================================================================
 function generateDeck() {
   for (let i = 0; i < suit.length; i++) {
@@ -180,9 +175,6 @@ function drawCard(deck) {
 
 // ===================================================================================================
 // Display a new card
-// [Ref] Initially, I attempted to add delayed execution for card draws after building the base game.
-//       but it froze the game.
-//       Solution (async/await for delay control) was implemented with ChatGPT's help.
 // ===================================================================================================
 function displayCard(targetClass, card, ms = 500) {
   return new Promise((resolve) => {
